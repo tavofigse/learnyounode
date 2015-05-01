@@ -4,24 +4,28 @@ var results = [];
 var count = 0;
 
 function printResults() {
-	for (var j=0; j<3;j++)
-		console.log(results[j])
+	for (var i=0; i<3;i++)
+		console.log(results[i])
 }
 
-for (var i=2; i < process.argv.length; i++) {
-	http.get(process.argv[i], function (response) {
+function HttpGet (index) {
+	http.get(process.argv[2 + index], function (response) {
 		response.setEncoding('utf8');
 		response.pipe(bl(function (err, data) {
 			
 			if (err)
 				return console.log(err)
-			
-			results[count] = data.toString('utf8');
+
+			results[index] = data.toString();
 			count++
 
-			if ( count == 3 )
+			if ( count == process.argv.length - 2 )
 				printResults()
 
 		}))
 	});
 };
+
+
+for (var i = 0; i < process.argv.length - 2; i++)
+	HttpGet(i)
